@@ -10,8 +10,9 @@ class App extends Component {
         super(props);
         this.state = {
             films: [],
-            hasLoaded: null,
-            people: []
+            people: [],
+            peopleHaveLoaded: false,
+            filmsHaveLoaded: false
 
         }
     }
@@ -24,53 +25,48 @@ class App extends Component {
             .then(res => res.json())
             .then(person => { this.setState({ people: person }) })
     }
-    handleLoadFilms = () => {
-        this.setState({ hasLoaded: this.state.films })
-    }
 
-    handleLoadPeople = () => {
-        this.setState({ hasLoaded: this.state.people })
-    }
 
     //have 2 buttons, one to load films and one to load people (new fetch endpoint)
     //display props name, age, gender and link to persons json response that will open in new tab
+  
+       handlefilms=()=> this.state.films.map((index) => {
+            return <Cards films={this.state.films}
+                key={index}
+                title={index.title}
+                description={index.description} />
+        })
 
+    handlePeople=()=> this.state.people.map((index) => {
+            return <People people={this.state.people}
+                key={index}
+                name={index.name} age={index.age}
+                gender={index.gender}
+                url={index.url} />
 
-    render() {
-        if (this.state.hasLoaded === this.state.films) {
-            this.state.films.map((index) => {
-                return <Cards films={this.state.films}
-                    key={index}
-                    title={index.title}
-                    description={index.description} />
-            })
+        })
 
-        } else if
-            (this.state.hasLoaded === this.state.people) {
+    handleToggle = () => {
+        if (this.state.filmsHaveLoaded === true) {
+            handleFilms();
 
-            this.state.people.map((index) => {
-                return <People people={this.state.people}
-                    key={index}
-                    name={index.name} age={index.age}
-                    gender={index.gender}
-                    url={index.url} />
-            })
         } else {
-            return (
-                <>
-                    <h3 className="text-center">Retreiving APIs</h3>
-                    <button onClick={e => this.handleLoadFilms} className="mb-4">Load Films</button>
-                    <button onClick={e => this.handleLoadPeople} className="mb-4">Load People</button>
-                </>)
+            (this.state.peopleHaveLoaded === false)
+            this.handlePeople();
         }
-    }
 
+
+        render() {
+            return (
+                <div>
+                    {this.handleToggle()}
+                    <h3 className="text-center">Retreiving APIs</h3>
+                    <button onClick={e => this.setState({ films: this.state.films, filmsHaveLoaded: true })} className="mb-4">Load Films</button>
+                    <button onClick={e => this.setState({ people: this.state.people, peopleHaveLoaded: true })} className="mb-4">Load People</button>
+                </div>)
+        
+    }}
 }
-
-
-
-
-
 
 
 export default App
