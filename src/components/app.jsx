@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import 'isomorphic-fetch';
 import 'es6-promise'
-import Cards from './Cards'
-import People from './People'
-
+import FilmCard from './FilmCard'
+import PeopleCard from './PeopleCard'
+import BackButton from './BackButton';
 
 class App extends Component {
     constructor(props) {
@@ -26,47 +26,73 @@ class App extends Component {
             .then(person => { this.setState({ people: person }) })
     }
 
+    handleLoadFilms = () => {
+        this.setState({
+            filmsHaveLoaded: true,
+            peopleHaveLoaded: false
+        });
+    }
+
+    handleLoadPeople = () => {
+        this.setState({
+            filmsHaveLoaded: false,
+            peopleHaveLoaded: true
+
+        })
+    }
+
+    handleBackButton = () => {
+        return (
+            <button onClick={this.setState({ filmsHaveLoaded: false, peopleHaveLoaded: false })}>Back</button>
+        )
+    }
 
     //have 2 buttons, one to load films and one to load people (new fetch endpoint)
     //display props name, age, gender and link to persons json response that will open in new tab
-  
-       handlefilms=()=> this.state.films.map((index) => {
-            return <Cards films={this.state.films}
-                key={index}
-                title={index.title}
-                description={index.description} />
-        })
 
-    handlePeople=()=> this.state.people.map((index) => {
-            return <People people={this.state.people}
-                key={index}
-                name={index.name} age={index.age}
-                gender={index.gender}
-                url={index.url} />
+    render() {
+        if (this.state.filmsHaveLoaded === true && !this.state.peopleHaveLoaded) {
+            return this.state.films.map((film) => {
+                return <><FilmCard film={film} key={film.id} />
+                    <BackButton reset={this.state} /></>
 
-        })
 
-    handleToggle = () => {
-        if (this.state.filmsHaveLoaded === true) {
-            handleFilms();
+            })
+
+        } else if (!this.state.filmsHaveLoaded === true && this.state.peopleHaveLoaded) {
+            return (this.state.people.map((person) => {
+                return <PeopleCard person={person} key={person.id} />
+            })
+            )
+        } else if (this.state.filmsHaveLoaded === true || this.state.peopleHaveLoaded === true) {
+            return <button onClick={this.setState({ filmsHaveLoaded: false, peopleHaveLoaded: false })}>Back</button>
 
         } else {
-            (this.state.peopleHaveLoaded === false)
-            this.handlePeople();
-        }
 
-
-        render() {
             return (
-                <div>
-                    {this.handleToggle()}
-                    <h3 className="text-center">Retreiving APIs</h3>
-                    <button onClick={e => this.setState({ films: this.state.films, filmsHaveLoaded: true })} className="mb-4">Load Films</button>
-                    <button onClick={e => this.setState({ people: this.state.people, peopleHaveLoaded: true })} className="mb-4">Load People</button>
-                </div>)
-        
-    }}
+                <div className="container d-flex justify-content-center">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <img src="https://ghibliapi.herokuapp.com/images/logo.svg" alt="logo"></img>
+                            <h3 className="text-center">Retreiving APIs</h3>
+                            <div className="row d-flex justify-content-center">
+                                <button onClick={this.handleLoadFilms}>Load Films</button>
+                                <button onClick={this.handleLoadPeople}>Load People</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            )
+
+        }
+    }
 }
+
+
+
+
+
 
 
 export default App

@@ -1,19 +1,20 @@
 import React from 'react';
 
-const People = (props) => {
+const PeopleCard = (props) => {
     return (
         <>
-            <section className="row">
-
+            <section className="row d-flex justify-content-center">
                 <article className="col-md-6">
                     <div className="card mb-4 border-info">
                         <div className="card-header bg-dark text-white text-center">
-                            <h4>{props.name}</h4>
+                            <h4>{props.person.name}</h4>
                         </div>
                         <ul className="card-body">
-                            <li>{props.age}</li>
-                            <li>{props.gender}</li>
-                            <li>{props.url}</li>
+                            <li>{props.person.age}</li>
+                            <li>{props.person.gender}</li>
+                            <li>
+                            <link href={props.person.url}>{props.person.url}</link>
+                            </li>
                         </ul>
                     </div>
                 </article>
@@ -21,6 +22,6 @@ const People = (props) => {
         </>)
 
 }
-  
-export default People
+
+export default PeopleCard
 
