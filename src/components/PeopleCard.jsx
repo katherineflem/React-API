@@ -13,7 +13,7 @@ const PeopleCard = (props) => {
                             <li>{props.person.age}</li>
                             <li>{props.person.gender}</li>
                             <li>
-                            <link href={props.person.url}>{props.person.url}</link>
+                            <a href={props.person.url}>{props.person.url}</a>
                             </li>
                         </ul>
                     </div>
